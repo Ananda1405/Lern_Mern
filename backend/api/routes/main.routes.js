@@ -14,10 +14,10 @@ router.get('/providers',mainController.readAll);
 router.get('/providers/:id',mainController.readOne);
 
 //PUT /api/providers/123
-router.put('/providers',mainController.update);
+router.put('/providers/:id',mainController.update);
 
 //Delete one provider /api/providers/123
-router.delete('/providers/:id',mainController,deleteOne);
+router.delete('/providers/:id',mainController.deleteOne);
 
 //Delete all providers /api/providers
 router.delete('/providers',mainController.deleteAll);
