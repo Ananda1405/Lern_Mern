@@ -73,3 +73,15 @@ module.exports.add = function(req, res){
     providers.push(provider);
     res.render('providers/providers-add', { title: 'Added'})
 }
+
+//Delete a provider
+module.exports.delete = function(req, res){
+    let id = req.params.id;
+    let provider = providers.find( provider=> provider.id == id )
+    let company = provider.company.company_name;
+    let idx = providers.indexOf(providers.find( provider=> provider.id == id ));
+    //Remove the element at the index of "idx"
+    providers.splice(idx,1)
+
+    res.render('providers/providers-delete', { title: 'delete', company : company})
+}

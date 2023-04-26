@@ -14,7 +14,8 @@ router.post('/update/:id', providersController.update);
 router.get('/add-provider', providersController.addform);
 /* GET add page. */
 router.post('/add', providersController.add);
-
+/* GET Delete page. */
+router.get('/delete/:id', providersController.delete);
 
 
 module.exports = router;
