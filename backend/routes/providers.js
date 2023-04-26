@@ -6,6 +6,11 @@ const providersController = require('../controllers/providers');
 router.get('/', providersController.list);
 /* GET detils page. */
 router.get('/details/:id', providersController.details);
+/* GET edit page. */
+router.get('/edit/:id', providersController.edit);
+/* GET post page. */
+router.post('/update/:id', providersController.update);
+
 
 
 module.exports = router;
