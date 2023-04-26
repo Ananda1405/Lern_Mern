@@ -1,4 +1,5 @@
 const providers = require('../model/providers')
+
 //List
 module.exports.list = function(req, res){
     res.render('providers/providers-list', {title: 'Service Providers', providers:providers})
@@ -34,4 +35,41 @@ module.exports.update = function(req, res){
     provider.company.tagline = req.body.tagline;
 
     res.render('providers/providers-update', {id:id, title: 'Update'})
+}
+
+//Add Form
+module.exports.addform = function(req, res){
+    res.render('providers/providers-add-form', {title: 'Add'})
+}
+
+//Update Add Form
+module.exports.add = function(req, res){
+    //Create Random ID
+    let min = 100000;
+    let max = 999999;
+    let id = Math.floor(Math.random() * (max-min) + min);
+
+    //create new provider object
+
+    let provider = {
+        id:id,
+        firstname : req.body.firstname,
+        lastname : req.body.lastname,
+        position : req.body.position,
+        company : {
+            company_name : req.body.company_name,
+            address : req.body.address,
+            address2 : req.body.address2,
+            city : req.body.city,
+            state : req.body.state,
+            postal_code : req.body.postal_code,
+            phone : req.body.phone,
+            email : req.body.email,
+            description : req.body.description,
+            tagline : req.body.tagline,
+        }
+    }
+    //Add New Provider to The List
+    providers.push(provider);
+    res.render('providers/providers-add', { title: 'Added'})
 }
