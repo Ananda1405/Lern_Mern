@@ -9,6 +9,9 @@ var usersRouter = require('./routes/users');
 var providersRouter = require('./routes/providers')
 var apiRouter = require('./api/routes/main.routes')
 
+//TO DO - remove later
+// const db = require('./api/db/db');
+
 var app = express();
 
 // view engine setup
@@ -25,6 +28,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/providers', providersRouter);
 app.use('/api', apiRouter);
+app.use('/*', indexRouter);
 
 
 // catch 404 and forward to error handler
