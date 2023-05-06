@@ -21,34 +21,20 @@ function handleError(res, error) {
 //uri: /api/providers
 module.exports.create = function (req, res) {
   // Create Random ID
-  try{
-    
-  // if (isEmptyList(providers)) {
-  //   providers = [];
-  // }
+  try {
+    var provider = req.body; //get new provider
 
-  // var id = req.body.id;
-  // if (existsProvider(id)) {
-  //   res.status(400);
-  //   res.send("Duplicate id not allowed.:(");
-  //   id = getUniqueId(); //get new ID
-  // }
-
-  var provider = req.body; //get new provider
-  
-  //Add New Provider to The List
-  Provider.create(provider)
-      .then(result=>{
+    //Add New Provider to The List
+    Provider.create(provider)
+      .then((result) => {
         res.status(201);
         res.send(result);
       })
-      .catch(error => handleError(res, error));  
-    }catch(error){
-      handleError(res,error);
-    }
+      .catch((error) => handleError(res, error));
+  } catch (error) {
+    handleError(res, error);
+  }
 };
-
-
 
 //GET All
 //uri: /api/providers
@@ -75,7 +61,7 @@ module.exports.readOne = function (req, res) {
   try {
     let id = ObjectId(req.params.id);
 
-    Provider.find({'_id':id}).then((result) => {
+    Provider.find({ _id: id }).then((result) => {
       if (isEmptyList(result)) {
         res.status(400);
         res.send("List is empty.");
@@ -92,55 +78,60 @@ module.exports.readOne = function (req, res) {
 //PUT
 //uri: /api/providers/123
 module.exports.update = function (req, res) {
-  if (isEmptyList(providers)) {
-    res.status(404);
-    res.send("List is empty.Cannot Update");
-  }
-  let id = req.params.id;
-  let provider = providers.find((provider) => provider.id == id);
-  provider.firstname = req.body.firstname;
-  provider.lastname = req.body.lastname;
-  provider.position = req.body.position;
-  provider.company.company_name = req.body.company.company_name;
-  provider.company.address = req.body.company.address;
-  provider.company.address2 = req.body.company.address2;
-  provider.company.city = req.body.company.city;
-  provider.company.state = req.body.company.state;
-  provider.company.postal_code = req.body.company.postal_code;
-  provider.company.phone = req.body.company.phone;
-  provider.company.email = req.body.company.email;
-  provider.company.description = req.body.company.description;
-  provider.company.tagline = req.body.company.tagline;
+  try {
+    let id = ObjectId(req.params.id);
+    let provider = req.body;
+    Provider.findOneAndUpdate({ _id: id }, provider, { new: true })
+      .then((result) => {
+        if (isEmptyList(result)) {
+          res.status(400);
+          res.send("List is empty. Nothing to update");
+        }
 
-  res.status(200);
-  res.send(provider);
+        res.status(200);
+        res.send(result);
+      })
+      .catch((error) => handleError(res, error));
+  } catch (error) {
+    handleError(res, error);
+  }
 };
 
 //Delete One
 //uri: /api/providers/123
 module.exports.deleteOne = function (req, res) {
-  if (isEmptyList(providers)) {
-    res.status(404);
-    res.send("List is empty. Cannot Delete");
+  try {
+    let id = ObjectId(req.params.id);
+    Provider.findOneAndDelete({'_id':id})
+      .then((result) => {
+        if (isEmptyList(result)) {
+          res.status(400);
+          res.send("List is empty. Cannot Delete");
+        }
+        res.status(200);
+        res.send(result);
+      })
+      .catch((error) => handleError(res, error));
+  } catch (error) {
+    handleError(res, error);
   }
-  let id = req.params.id;
-  let provider = providers.find((provider) => provider.id == id);
-  let idx = providers.indexOf(providers.find((provider) => provider.id == id));
-  //Remove the element at the index of "idx"
-  providers.splice(idx, 1);
-
-  res.status(200);
-  res.send(provider);
 };
 
 //Delete All
 //uri: /api/providers
 module.exports.deleteAll = function (req, res) {
-  if (isEmptyList(providers)) {
-    res.status(404);
-    res.send("List is empty.CAnt delete");
+  try {
+    Provider.deleteMany({})
+      .then((result) => {
+        if (result.deletedCount === 0) {
+          res.status(400);
+          res.send("List is empty. Nothing to delete");
+        }
+        res.status(200);
+        res.send("All Providers Deleted.]n" + result);
+      })
+      .catch((error) => handleError(res, error));
+  } catch (error) {
+    handleError(res, error);
   }
-  providers = [];
-  res.status(200);
-  res.send("All Providers Deleted");
 };
